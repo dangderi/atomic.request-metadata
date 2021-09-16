@@ -1,0 +1,12 @@
+[
+  {
+    "code": "A",
+    "description": "Action as requested",
+    "code_active": "Y"
+  },
+  {
+    "code": "CM",
+    "description": "Cancelled by Member",
+    "code_active": "Y"
+  }
+]

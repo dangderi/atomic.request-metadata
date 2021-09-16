@@ -1,0 +1,46 @@
+[
+  {
+    "code": "E",
+    "description": "Email"
+  },
+  {
+    "code": "F",
+    "description": "Fax"
+  },
+  {
+    "code": "G",
+    "description": "Face to Face"
+  },
+  {
+    "code": "I",
+    "description": "Internal Request"
+  },
+  {
+    "code": "L",
+    "description": "Letter"
+  },
+  {
+    "code": "M",
+    "description": "IFSO/Regulator/Media"
+  },
+  {
+    "code": "P",
+    "description": "Provider Web"
+  },
+  {
+    "code": "Q",
+    "description": "Future Dated Request"
+  },
+  {
+    "code": "R",
+    "description": "Reception"
+  },
+  {
+    "code": "T",
+    "description": "Telephone"
+  },
+  {
+    "code": "W",
+    "description": "Web"
+  }
+]

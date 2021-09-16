@@ -1,0 +1,13 @@
+[
+  {
+    "source": "memeber enquiry",
+    "policy": "POL-12345",
+    "applicationId": "APP-0000",
+    "firstName": "David",
+    "lastName": "Li",
+    "applicationType": "Request",
+    "status": "Resolved",
+    "assignee": "Mark",
+    "assignedDate": "2017-07-21T17:32:28Z"
+  }
+]

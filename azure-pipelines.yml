@@ -1,0 +1,81 @@
+variables:
+  ServiceConnection: "AKS-SP"
+  SonarqubeQualityGate: "Southern Cross MicroServices"
+
+trigger:
+  - develop
+  - main
+
+stages:
+  - stage: Build
+    variables:
+      KvEnv: 'dv'
+    jobs:
+      - job: sonarquebJob
+        steps:
+          - task: AzureKeyVault@1
+            inputs:
+              azureSubscription: '$(ServiceConnection)'
+              KeyVaultName: 'z-cust360view-kv-ae-$(KvEnv)'
+              SecretsFilter: '*'
+              RunAsPreJob: true
+          - task: NodeTool@0
+            displayName: 'Use Node 12.13.0'
+            inputs:
+              versionSpec: 12.13.0
+          - task: Npm@1
+            displayName: 'npm install'
+          - task: Npm@1
+            displayName: 'npm Run Tests'
+            inputs:
+              command: custom
+              customCommand: 'run test'
+          - task: SonarQubePrepare@4
+            inputs:
+              SonarQube: "SonarQube Service Connection"
+              scannerMode: "CLI"
+              configMode: "manual"
+              cliProjectKey: "atomic-request-metadata"
+              cliProjectName: "atomic-request-metadata"
+              cliSources: "."
+              extraproperties: |
+                sonar.exclusions=chart/**/*.yaml,azure-pipelines.yml,openapi.yaml
+                sonar.typescript.lcov.reportPaths=coverage/lcov.info
+                sonar.coverage.exclusions=**/jest.config.js,src/app.ts,src/server.ts,src/utils/response.ts,src/controllers/api.ts
+          - task: Bash@3
+            displayName: 'Setting SonarCloud Project Quality Gate'
+            inputs:
+              targetType: 'inline'
+              script: 'curl -v -X POST https://$(SonarqubeToken)@sonarqube.southerncross.co.nz/api/qualitygates/select -d "gateName=$(SonarqubeQualityGate)&projectKey=atomic-request-metadata"'
+          - task: OWASPDependencyCheck@0
+            inputs:
+              outputDirectory: '$(Agent.TempDirectory)/dependency-scan-results'
+              scanDirectory: '$(Build.SourcesDirectory)'
+              outputFormat: 'ALL'
+              useSonarQubeIntegration: true
+          - task: SonarQubeAnalyze@4
+          - task: SonarQubePublish@4
+            inputs:
+              pollingTimeoutSec: "300"
+          - task: sonar-buildbreaker@8
+            inputs:
+              SonarQube: "SonarQube Service Connection"
+  - stage: Dockerize
+    variables:
+      KvEnv: 'dv'
+    jobs:
+      - job: BuildAndPushDockerImage
+        steps:
+          - task: AzureKeyVault@1
+            inputs:
+              azureSubscription: '$(ServiceConnection)'
+              KeyVaultName: 'z-cust360view-kv-ae-$(KvEnv)'
+              SecretsFilter: '*'
+              RunAsPreJob: true
+          - script: |
+              msVersion=$(node -p "require('./package.json').version")
+              az acr login --name $(DockerRegistry) --username $(AcrUsername) --password $(AcrPassword)
+              docker login registry.redhat.io --username $(RedhatRegistryUsername) --password $(RedhatRegistryPassword)
+              docker build -t $(DockerRegistry).azurecr.io/atomic-request-metadata:$msVersion -f ./Dockerfile .
+              docker push $(DockerRegistry).azurecr.io/atomic-request-metadata:$msVersion
+            displayName: 'Push Docker Image to ACR'

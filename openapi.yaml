@@ -1,0 +1,957 @@
+openapi: "3.0.3"
+info:
+  title: "atomic.request-metadata"
+  description: "Meta data for lookups"
+  version: 1.0.0
+  termsOfService: "https://www.southerncross.co.nz/terms-of-use"
+  contact:
+    email: "info@southerncross.co.nz"
+servers:
+  - url: https://sample.api.host
+
+security:
+  - basicAuth: []
+
+paths:
+  /note-types:
+    get:
+      summary: NOTE_TYPE meta data for lookups
+      description: Note types meta data for lookups
+      operationId: getNoteTypes
+      parameters:
+        - in: header
+          name: X-Organisation-Correlation-Id
+          schema:
+            type: string
+            format: uuid
+          required: true
+          description: Correlation or transaction Id in UUID format
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NoteTypes'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /note-cat-depts:
+    get:
+      summary: Policy department meta data for lookups
+      description: Policy department meta data for lookups.
+      operationId: getPolicyDepartments
+      parameters:
+        - in: header
+          name: X-Organisation-Correlation-Id
+          schema:
+            type: string
+            format: uuid
+          required: true
+          description: Correlation or transaction Id in UUID format
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NoteCatDepts'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /enquiries:
+    get:
+      summary: Retrieves enquiries related to given department and assignee
+      description: This is a list of enquiries query by department or assignee.
+      operationId: getEnquiries
+      parameters:
+        - in: header
+          name: X-Organisation-Correlation-Id
+          schema:
+            type: string
+            format: uuid
+          required: true
+          description: Correlation or transaction Id in UUID format
+        - in: query
+          name: department
+          schema:
+            type: string
+          required: false
+          description: The department name
+        - in: query
+          name: assignee
+          schema:
+            type: string
+          required: false
+          description: The assignee name
+      responses:
+        "200":
+          description: "successful operation"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Enquiries'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /note-categories:
+    get:
+      summary: CC_NOTE_CAT meta data for lookups
+      description: CC_NOTE_CAT meta data for lookups.
+      operationId: getNoteCategories
+      parameters:
+        - in: header
+          name: X-Organisation-Correlation-Id
+          schema:
+            type: string
+            format: uuid
+          required: true
+          description: Correlation or transaction Id in UUID format
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NoteCategories'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /wrapup-codes:
+    get:
+      summary: CC_WRAP_UP_CODES meta data for lookups
+      description: CC_WRAP_UP_CODES meta data for lookups
+      operationId: getWrapUpCodes
+      parameters:
+        - in: header
+          name: X-Organisation-Correlation-Id
+          schema:
+            type: string
+            format: uuid
+          required: true
+          description: Correlation or transaction Id in UUID format
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WrapupCodes'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /policy-metadata:
+    get:
+      summary: Retrieves policy meta data
+      description: This includes note-types, note-cat-depts, note-categories and wrap-up codes
+      operationId: getPolicyMetaData
+      parameters:
+        - in: header
+          name: X-Organisation-Correlation-Id
+          schema:
+            type: string
+            format: uuid
+          required: true
+          description: Correlation or transaction Id in UUID format
+      responses:
+        "201":
+          description: "successful operation"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NoteTypes'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /departments:
+    get:
+      summary: Retrieves Request departments
+      description: Retrieves Request departments
+      operationId: getDepartments
+      parameters:
+        - in: header
+          name: X-Organisation-Correlation-Id
+          schema:
+            type: string
+            format: uuid
+          required: true
+          description: Correlation or transaction Id in UUID format
+        - in: query
+          name: page
+          schema:
+            type: integer
+            format: int32
+            example: 1
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            format: int32
+            example: 100
+        - in: query
+          name: id
+          schema:
+            type: string
+            example: "1212"
+      responses:
+        "201":
+          description: "successful operation"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NoteCatDept'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /sec-users:
+    get:
+      summary: SEC_USER meta data for lookups
+      description: SEC_USER meta data for lookups (This is fetching from cosmos DB)
+      operationId: getSecUsers
+      parameters:
+        - in: header
+          name: X-Organisation-Correlation-Id
+          schema:
+            type: string
+            format: uuid
+          required: true
+          description: Correlation or transaction Id in UUID format
+        - in: query
+          name: userId
+          schema:
+            type: string
+          required: false
+          description: Search for user ID that starts with the typed letters
+        - in: query
+          name: page
+          schema:
+            type: integer
+            format: int32
+            example: 1
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            format: int32
+            example: 100
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SecUsers'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /request-types:
+    get:
+      summary: REQUEST_TYPE meta data for lookups
+      description: REQUEST_TYPE meta data for lookups
+      operationId: getRequestTypes
+      parameters:
+        - in: header
+          name: X-Organisation-Correlation-Id
+          schema:
+            type: string
+            format: uuid
+          required: true
+          description: Correlation or transaction Id in UUID format
+        - in: query
+          name: departmentId
+          schema:
+            type: string
+          required: false
+          description: Department ID
+        - in: query
+          name: forceSecondary
+          schema:
+            type: boolean
+            example: false
+          required: false
+          description: This parameter is for the service mesh to inject the boolean value depending on the states of the primary data source. "true" will force the route to secondary read only.
+        - in: query
+          name: page
+          schema:
+            type: integer
+            format: int32
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            format: int32
+
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestTypes'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /request-histories:
+    get:
+      summary: REQUEST_TYPE meta data for lookups
+      description: REQUEST_TYPE meta data for lookups
+      operationId: getRequestHistories
+      parameters:
+        - in: header
+          name: X-Organisation-Correlation-Id
+          schema:
+            type: string
+            format: uuid
+          required: true
+          description: Correlation or transaction Id in UUID format
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestHistories'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /request-statuses:
+    get:
+      summary: Retrieves request statuses
+      description: This is a list of enquiries query by department or assignee.
+      operationId: getRequestStatuses
+      parameters:
+        - in: header
+          name: X-Organisation-Correlation-Id
+          schema:
+            type: string
+            format: uuid
+          required: true
+          description: Correlation or transaction Id in UUID format
+        - in: query
+          name: page
+          schema:
+            type: integer
+            format: int32
+            example: 1
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            format: int32
+            example: 100
+      responses:
+        "200":
+          description: "successful operation"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Statuses'
+        '500':
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /priorities:
+    get:
+      summary: Retrieves RQT Priorities
+      description: This is a list of priorities
+      operationId: getPriorities
+      parameters:
+        - in: header
+          name: X-Organisation-Correlation-Id
+          schema:
+            type: string
+            format: uuid
+          required: true
+          description: Correlation or transaction Id in UUID format
+      responses:
+        "200":
+          description: "successful operation"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Priorities'
+        '500':
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /formats:
+    get:
+      summary: Retrieves RQT formats
+      description: This is a list of priorities
+      operationId: getFormats
+      parameters:
+        - in: header
+          name: X-Organisation-Correlation-Id
+          schema:
+            type: string
+            format: uuid
+          required: true
+          description: Correlation or transaction Id in UUID format
+        - in: query
+          name: page
+          schema:
+            type: integer
+            format: int32
+            example: 1
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            format: int32
+            example: 100
+      responses:
+        "200":
+          description: "successful operation"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Formats'
+        '500':
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /resolutions:
+    get:
+      summary: Retrieves RQT resolution
+      description: This is a list of resolutions
+      operationId: getResolutions
+      parameters:
+        - in: header
+          name: X-Organisation-Correlation-Id
+          schema:
+            type: string
+            format: uuid
+          required: true
+          description: Correlation or transaction Id in UUID format
+        - in: query
+          name: departmentId
+          schema:
+            type: integer
+          required: true
+          description: department ID
+      responses:
+        "200":
+          description: "successful operation"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Resolutions'
+        '500':
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /additionalinfo:
+    get:
+      summary: Retrieves RQT additional info based on the request type
+      description: It brings the fields that user needs for input
+      operationId: getAdditionalInfo
+      parameters:
+        - in: header
+          name: X-Organisation-Correlation-Id
+          schema:
+            type: string
+            format: uuid
+          required: true
+          description: Correlation or transaction Id in UUID format
+        - in: query
+          name: departmentId
+          schema:
+            type: integer
+          required: true
+          description: department ID
+      responses:
+        "200":
+          description: "successful operation"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Resolution'
+        '500':
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+components:
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+  schemas:
+    Error:
+      type: object
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string
+    RequestTypes:
+      type: object
+      properties:
+        total:
+          type: integer
+          format: int32
+          example: 3
+        page:
+          type: integer
+          format: int32
+          example: 1
+        limit:
+          type: integer
+          format: int32
+          example: 100
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/RequestType'
+
+    Enquiry:
+      type: object
+      properties:
+        source:
+          type: string
+          example: "memeber enquiry"
+        policy:
+          type: string
+          example: "POL-12345"
+        applicationId:
+          type: string
+          example: "APP-0000"
+        firstName:
+          type: string
+          example: "David"
+        lastName:
+          type: string
+          example: "Li"
+        applicationType:
+          type: string
+          example: "Request"
+        status:
+          type: string
+          example: "Resolved"
+        assignee:
+          type: string
+          example: "Mark"
+        assignedDate:
+          type: string
+          format: date-time
+          example: "2017-07-21T17:32:28Z"
+
+    NoteType:
+      type: object
+      properties:
+        id:
+          type: string
+        insertUser:
+          type: string
+        insertProcess:
+          type: string
+        userDefined4St:
+          type: string
+        noteType:
+          type: string
+        userDefined3St:
+          type: string
+        userDefined5St:
+          type: string
+        reasonCodeType:
+          type: string
+        renewalNoteType:
+          type: string
+        userDefined1St:
+          type: string
+        updateUser:
+          type: string
+        userDefined2St:
+          type: string
+        noteSecurityCode:
+          type: string
+        userDate1St:
+          type: string
+        userDate2St:
+          type: string
+        userDate5St:
+          type: string
+        userDate3St:
+          type: string
+        userDate4St:
+          type: string
+        updateProcess:
+          type: string
+        description:
+          type: string
+        allowDelete:
+          type: string
+        deleteDays:
+          type: string
+        insertDatetime:
+          type: string
+        updateDatetime:
+          type: string
+          
+    NoteTypes:
+      type: array
+      items:
+        $ref: '#/components/schemas/NoteType'
+    NoteCatDept:
+      type: object
+      properties:
+        id:
+          type: string
+        insertUser:
+          type: string
+        seqCcNoteCatDept:
+          type: string
+        insertDateTime:
+          type: string
+        insertProcess:
+          type: string
+        updateProcess:
+          type: string
+        active:
+          type: string
+        deptCode:
+          type: string
+        updateUser:
+          type: string
+        deptDesc:
+          type: string
+        updateDateTime:
+          type: string
+
+    NoteCatDepts:
+      type: array
+      items:
+        $ref: '#/components/schemas/NoteCatDept'
+    NoteCategory:
+      type: object
+      properties:
+        id:
+          type: string
+        insertUser:
+          type: string
+        seqCcNoteCatDept:
+          type: string
+        insertDateTime:
+          type: string
+        insertProcess:
+          type: string
+        updateProcess:
+          type: string
+        seqCcNoteCat:
+          type: string
+        active:
+          type: string
+        updateUser:
+          type: string
+        noteCatDesc:
+          type: string
+        updateDateTime:
+          type: string
+        noteCatCode:
+          type: string
+    NoteCategories:
+      type: array
+      items:
+        $ref: '#/components/schemas/NoteCategory'
+    WrapupCode:
+      type: object
+      properties:
+        id:
+          type: string
+        insertUser:
+          type: string
+        insertDateTime:
+          type: string
+        seqCcWrapUp:
+          type: string
+        insertProcess:
+          type: string
+        updateProcess:
+          type: string
+        description:
+          type: string
+        activeInd:
+          type: string
+        sortOrder:
+          type: string
+        updateUser:
+          type: string
+        wrapupCode:
+          type: string
+        updateDateTime:
+          type: string
+    WrapupCodes:
+      type: array
+      items:
+        $ref: '#/components/schemas/WrapupCode'
+
+    Enquiries:
+      type: array
+      items:
+        $ref: '#/components/schemas/Enquiry'
+    SecUser:
+      type: object
+      properties:
+        id:
+          type: string
+        initials:
+          type: string
+        ext:
+          type: string
+        onlineClaimsRcptDefaultYn:
+          type: string
+        insertProcess:
+          type: string
+        lname:
+          type: string
+        debugSession:
+          type: string
+        screenpopEnabledYn:
+          type: string
+        addonsFontScalePct:
+          type: string
+        userId:
+          type: string
+        busUnitFuncAreaId:
+          type: string
+        managerUserId:
+          type: string
+        seqReqDeptId:
+          type: string
+        insertDatetime:
+          type: string
+        updateProcess:
+          type: string
+        emailAddress:
+          type: string
+        description:
+          type: string
+        depManagerUserId:
+          type: string
+        claimBarcodePrinterName:
+          type: string
+        mi:
+          type: string
+        insertUser:
+          type: string
+        usrLocation:
+          type: string
+        defaultKpiCode:
+          type: string
+        curUsrDept:
+          type: string
+        pwdLastChanged:
+          type: string
+        updateUser:
+          type: string
+        dfltTemplate:
+          type: string
+        securityLevel:
+          type: string
+        updateDatetime:
+          type: string
+        fname:
+          type: string
+        businessUnitId:
+          type: string
+        terminationDate:
+          type: string
+        tel:
+          type: string
+        templateFlg:
+          type: string
+        fax:
+          type: string
+    SecUsers:
+      type: array
+      items:
+        $ref: '#/components/schemas/SecUser'
+
+
+    RequestType:
+      type: object
+      properties:
+        id:
+          type: string
+        insertUser:
+          type: string
+        reqTypeActive:
+          type: string
+        insertProcess:
+          type: string
+        notifyAssignee:
+          type: string
+        updateUser:
+          type: string
+        userDefined1Label:
+          type: string
+        notifyType:
+          type: string
+        reqTypeDesc:
+          type: string
+        updateDatetime:
+          type: string
+        additionalInfoWindowObj:
+          type: string
+        overrideAssigneeUserId:
+          type: string
+        seqReqDeptId:
+          type: string
+        notifyLoggedUser:
+          type: string
+        insertDatetime:
+          type: string
+        updateProcess:
+          type: string
+        reqTypeShortDesc:
+          type: string
+        seqReqTypeId:
+          type: string
+        noteTypeActive:
+          type: string
+
+    RequestHistory:
+      type: object
+      properties:
+        id:
+          type: string
+        insertUser:
+          type: string
+        oldReqStatusDesc:
+          type: string
+        oldAssignedUserName:
+          type: string
+        insertProcess:
+          type: string
+        oldReqStatus:
+          type: string
+        newReqStatusDesc:
+          type: string
+        updateUser:
+          type: string
+        seqReqHistoryId:
+          type: string
+        newAssignedUser:
+          type: string
+        seqReqId:
+          type: string
+        updateDatetime:
+          type: string
+        oldAssignedUser:
+          type: string
+        insertDatetime:
+          type: string
+        updateProcess:
+          type: string
+        newReqStatus:
+          type: string
+        historyDesc:
+          type: string
+        newAssignedUserName:
+          type: string
+    RequestHistories:
+      type: array
+      items:
+        $ref: '#/components/schemas/RequestHistory'
+        
+    Status:
+      type: object
+      properties:
+        code:
+          type: string
+          example: "A1"
+        description:
+          type: string
+          example: "1st contact made"
+    Statuses:
+      type: array
+      items:
+        $ref: '#/components/schemas/Status'
+
+    Priority:
+      type: object
+      properties:
+        code:
+          type: string
+          example: "1"
+        description:
+          type: string
+          example: "High"
+    Priorities:
+      type: array
+      items:
+        $ref: "#/components/schemas/Priority"
+        
+    Format:
+      type: object
+      properties:
+        code:
+          type: string
+          example: "E"
+        description:
+          type: string
+          example: "Email"
+    Formats:
+      type: array
+      items:
+        $ref: "#/components/schemas/Format"
+        
+    Resolution:
+      type: object
+      properties:
+        code:
+          type: string
+          example: "A"
+        description: 
+          type: string
+          example: "Action as requested"
+        code_active:
+          type: string
+          example: "Y"
+    Resolutions:
+      type: array
+      items:
+        $ref: '#/components/schemas/Resolution' 

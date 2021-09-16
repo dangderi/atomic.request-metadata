@@ -1,0 +1,14 @@
+[
+  {
+    "code": "1",
+    "description": "High"
+  },
+  {
+    "code": "2",
+    "description": "Medium"
+  },
+  {
+    "code": "3",
+    "description": "Low"
+  }
+]

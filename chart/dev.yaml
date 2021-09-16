@@ -1,0 +1,29 @@
+replicaCount: 1
+
+image:
+  repository: zcust360dv.azurecr.io/atomic-request-metadata
+  tag: dev
+  pullPolicy: Always
+
+imagePullSecrets:
+  - name: zcust360dv
+
+service:
+  type: ClusterIP
+  port: 80
+
+# Gateway name used in Virtual Service
+gateway: customer360-gateway
+
+# REST Resource Naming Best Practices:
+# api.southerncross.co.nz/journey-name/service-category/resource
+# Here we define uri prefix of /journey-name/service-category
+# /resource, will be included inside app codes itself
+uriPrefix: /atomic/request-metadata
+
+# Here is just for example, you can define whatever you want here.
+# The env variables that don't require to retrieve from Azure key vault can be written here.
+# Once you define env variables here, it will be automatically applied into k8s app via Azure DevOps pipeline.
+envProperties:
+  COSMOS_ENDPOINT: https://z-microservices-cdb-ae-dv.documents.azure.com:443/
+  COSMOS_DATABASE_ID: Raw

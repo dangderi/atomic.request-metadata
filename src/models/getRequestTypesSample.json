@@ -1,0 +1,28 @@
+{
+  "total": 3,
+  "page": 1,
+  "limit": 100,
+  "data": [
+    {
+      "id": "",
+      "insertUser": "",
+      "reqTypeActive": "",
+      "insertProcess": "",
+      "notifyAssignee": "",
+      "updateUser": "",
+      "userDefined1Label": "",
+      "notifyType": "",
+      "reqTypeDesc": "",
+      "updateDatetime": "",
+      "additionalInfoWindowObj": "",
+      "overrideAssigneeUserId": "",
+      "seqReqDeptId": "",
+      "notifyLoggedUser": "",
+      "insertDatetime": "",
+      "updateProcess": "",
+      "reqTypeShortDesc": "",
+      "seqReqTypeId": "",
+      "noteTypeActive": ""
+    }
+  ]
+}

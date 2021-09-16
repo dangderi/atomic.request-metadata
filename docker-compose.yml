@@ -1,0 +1,35 @@
+version: "3.7"
+
+services:
+  underwriter-001-request-metadata:
+    image: zcust360dv.azurecr.io/underwriter-001-request-metadata:1.0.0-SNAPSHOT
+    command: sh -c "node dist/server.js"
+    ports:
+      - 3000:3000
+    working_dir: /usr/src/app
+    environment:
+      ATOMIC_REQUEST_METADATA_BASE_URL: http://atomic-request-metadata:3000
+
+  atomic-request-metadata:
+    image: zcust360dv.azurecr.io/atomic-request-metadata:1.0.0-SNAPSHOT
+    command: sh -c "node dist/server.js"
+    ports:
+      - 3001:3000
+    working_dir: /usr/src/app
+    environment:
+      DATA_ACCESS_BASE_URL: http://atomic-dataaccess-connector:3000
+      DATA_EDGE_ENDPOINT: https://z-microservices-cdb-ae-dv.documents.azure.com:443/
+      COSMOS_READ_ONLY_KEY:
+      DATA_EDGE_DATABASE_ID: Raw
+
+  atomic-dataaccess-connector:
+    image: zcust360dv.azurecr.io/atomic-dataaccess-connector:dev
+    command: sh -c "node dist/server.js"
+    ports:
+      - 3002:3000
+    working_dir: /usr/src/app
+    environment:
+      ORACLE_HOST:
+      ORACLE_USER:
+      ORACLE_PASSWORD:
+      ORACLE_DATABASE:
