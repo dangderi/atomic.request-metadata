@@ -4,8 +4,8 @@ import dataAccessService from "../services/dataaccess.service";
 import {QueryResult} from "../models/model";
 import getEnquiriesSample from "../models/getEnquiriesSample.json";
 
-class SampleService {
-  private logger = log4js.getLogger("RequestMetaataService");
+class RequestMetadataService {
+  private logger = log4js.getLogger("RequestMetadataService");
   private headers = {
     "Accept": "application/json"
   };
@@ -35,24 +35,77 @@ class SampleService {
   public async getSecUsers(correlationId: string, page: number = 1, limit: number = 100, userId: string): Promise<any | null> {
     this.logger.debug(`headers: ${JSON.stringify(this.headers)}`);
     try {
-      const requestStatuses = await dataEdgeService.getSecUsers( correlationId, userId);
-      this.logger.debug(`HTTP response: ${JSON.stringify(requestStatuses)}`);
+      const users = await dataEdgeService.getSecUsers( correlationId, userId);
+      this.logger.debug("HTTP response: ", userId);
 
       const startIndex = (page - 1) * limit;
       const endIndex = page * limit;
       const items: QueryResult = {
-        "total": requestStatuses.length,
+        "total": users.length,
         "page": page,
         "limit": limit,
-        "data": requestStatuses.slice(startIndex, endIndex)
+        "data": users.slice(startIndex, endIndex)
       };
       return items;
     } catch( error ) {
       this.logger.error(`Primary read has failed: ${error}`);
       this.logger.debug("Secondary read is initiated.");
-      return await dataAccessService.getSecUsers( correlationId, userId) ;
+      return await dataAccessService.getSecUsers( correlationId, userId);
     }
   }
+
+  // This INCLUDES terminated users
+  // Purposefully not reading from CosmosDB
+  // Uses Diamond specific view "V_REQUEST_USER_LOOKUP"
+  public async getRequestUsers(correlationId: string, page: number = 1, limit: number = 100, userId: string): Promise<any | null> {
+    this.logger.debug(`headers: ${JSON.stringify(this.headers)}`);
+    try {
+      throw new Error("CosmosDB does not have the equivalent table");
+      const users = await dataEdgeService.getSecUsers( correlationId, userId);
+      this.logger.debug("HTTP response: ", userId);
+
+      const startIndex = (page - 1) * limit;
+      const endIndex = page * limit;
+      const items: QueryResult = {
+        "total": users.length,
+        "page": page,
+        "limit": limit,
+        "data": users.slice(startIndex, endIndex)
+      };
+      return items;
+    } catch( error ) {
+      this.logger.error(`Primary read has failed: ${error}`);
+      this.logger.debug("Secondary read is initiated.");
+      return await dataAccessService.getRequestUsers( correlationId, userId);
+    }
+  }
+
+  // This EXCLUDES the terminated users
+  // Purposefully not reading from CosmosDB
+  // Uses Diamond specific view "V_REQUEST_ASS_USER_LOOKUP"
+  public async getRequestAssigneeUsers(correlationId: string, page: number = 1, limit: number = 100, userId: string): Promise<any | null> {
+    this.logger.debug(`headers: ${JSON.stringify(this.headers)}`);
+    try {
+      throw new Error("CosmosDB does not have the equivalent table");
+      const users = await dataEdgeService.getSecUsers( correlationId, userId);
+      this.logger.debug("HTTP response: ", userId);
+
+      const startIndex = (page - 1) * limit;
+      const endIndex = page * limit;
+      const items: QueryResult = {
+        "total": users.length,
+        "page": page,
+        "limit": limit,
+        "data": users.slice(startIndex, endIndex)
+      };
+      return items;
+    } catch( error ) {
+      this.logger.error(`Primary read has failed: ${error}`);
+      this.logger.debug("Secondary read is initiated.");
+      return await dataAccessService.getRequestAssigneeUsers( correlationId, userId);
+    }
+  }
+
 
   public async getNoteTypes(correlationId: string, page: number = 1, limit: number = 100): Promise<any | null> {
     this.logger.debug(`headers: ${JSON.stringify(this.headers)}`);
@@ -245,14 +298,14 @@ class SampleService {
         "page": page,
         "limit": limit,
         "data": formats.slice(startIndex, endIndex)
-      };      
+      };
       return items;
     } catch( error ) {
         this.logger.error(`Primary read has failed: ${error}`);
         this.logger.debug("Secondary read is initiated.");
         return await dataAccessService.getFormats( correlationId ) ;
       }
-  }    
+  }
 }
 
-export default new SampleService();
+export default new RequestMetadataService();

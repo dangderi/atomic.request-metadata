@@ -6,7 +6,7 @@ import getAdditionalInfoSample from "../models/getAdditionalInfoSample.json";
 
 import NotFoundError from "../errors/NotFoundError";
 
-import services from "../services/sample.service";
+import services from "../services/request.metadata.service";
 
 import { QueryResult } from "../models/model";
 import {
@@ -173,12 +173,59 @@ class DelegateController {
                 `Missing header ${this.correlationIdHeaderName}`
             );
         }
-
         const userId = req.query.userId as string;
-        const page = Number(req.query.page);
-        const limit = Number(req.query.limit);
         try {
-            const items = await services.getSecUsers(correlationId, page, limit, userId);
+            const items = await services.getSecUsers(correlationId, Number(req.query.page), Number(req.query.limit), userId);
+            return successResponse(res, items);
+        } catch (error) {
+            console.log(error.stack);
+            if (error instanceof NotFoundError) {
+                return badRequestResponse(res, error.getMessage());
+            } else {
+                return unexpectedErrorResponse(res, error.message);
+            }
+        }
+    };
+
+    /**
+     * @route get /request-users
+     */
+     public getRequestUsers = async (req: Request, res: Response) => {
+        const correlationId = req.header(this.correlationIdHeaderName);
+        if (!correlationId) {
+            return badRequestResponse(
+                res,
+                `Missing header ${this.correlationIdHeaderName}`
+            );
+        }
+        const userId = req.query.userId as string;
+        try {
+            const items = await services.getRequestUsers(correlationId, Number(req.query.page), Number(req.query.limit), userId);
+            return successResponse(res, items);
+        } catch (error) {
+            console.log(error.stack);
+            if (error instanceof NotFoundError) {
+                return badRequestResponse(res, error.getMessage());
+            } else {
+                return unexpectedErrorResponse(res, error.message);
+            }
+        }
+    };
+
+    /**
+     * @route get /request-assignee-users
+     */
+     public getRequestAssigneeUsers = async (req: Request, res: Response) => {
+        const correlationId = req.header(this.correlationIdHeaderName);
+        if (!correlationId) {
+            return badRequestResponse(
+                res,
+                `Missing header ${this.correlationIdHeaderName}`
+            );
+        }
+        const userId = req.query.userId as string;
+        try {
+            const items = await services.getRequestAssigneeUsers(correlationId, Number(req.query.page), Number(req.query.limit), userId);
             return successResponse(res, items);
         } catch (error) {
             console.log(error.stack);

@@ -27,6 +27,8 @@ app.get("/note-categories", apiController.getNoteCategories);
 app.get("/wrapup-codes", apiController.getWrapUpCodes);
 app.get("/departments", apiController.getDepartments);
 app.get("/sec-users", apiController.getSecUsers);
+app.get("/request-users", apiController.getRequestUsers);
+app.get("/request-assignee-users", apiController.getRequestAssigneeUsers);
 app.get("/request-types", apiController.getRequestTypes);
 app.get("/request-histories", apiController.getRequestHistories);
 app.get("/request-statuses", apiController.getRequestStatuses);

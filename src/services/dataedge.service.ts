@@ -44,10 +44,26 @@ class DataEdge {
   }
 
   public async getRequestStatuses(correlationId: string): Promise<any | null> {
-    const sql = "";
+    const sql = `SELECT
+      c.LIST_TYPE as LIST_TYPE,
+      c.CODE as CODE,
+      c.DESCRIPTION as DESCRIPTION,
+      c.INSERT_USER as INSERT_USER,
+      c.UPDATE_USER as UPDATE_USER,
+      c.UPDATE_DATETIME as UPDATE_DATETIME,
+      c.INSERT_PROCESS as INSERT_PROCESS,
+      c.UPDATE_PROCESS as UPDATE_PROCESS,
+      c.ACTIVE_IND as ACTIVE_IND,
+      c.SORT_ORDER as SORT_ORDER,
+      c.CODE_2 as CODE_2
+      FROM c
+      WHERE c.LIST_TYPE="REQ_STATUS"
+      ORDER BY c.LIST_TYPE DESC, c.CODE DESC`;
+
     this.logger.debug("SQL: ", sql, "correlationId: ", correlationId);
-    return Promise.reject("Request status document not available yet");
-  }
+
+    return await cosmosDB.getAllItems(sql, "APP_VALUE_LIST", {});
+    }
 
   public async getSecUsers(correlationId: string, userId: string): Promise<any | null> {
     let sql = `SELECT

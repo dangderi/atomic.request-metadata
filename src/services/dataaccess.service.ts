@@ -59,7 +59,33 @@ class DataAccess {
     }
     public async getSecUsers( correlationId: string, userId: string ): Promise<any | null> {
         const query = {
-            table: "V_REQUEST_USER_LOOKUP  ",
+            table: "SEC_USER",
+            select: "*",
+            where: [{
+                "key": "USER_ID",
+                "operator": "LIKE",
+                "value": `${userId}%`
+            }],
+            limit: 100
+        };
+        const headers = {
+            Accept: "application/json",
+            "X-Organisation-Correlation-Id": correlationId,
+        };
+        this.logger.debug("SQL: ", query, "correlationId: ", correlationId);
+        const response = await axios.post(
+            `${this.dataAccess}/query-builder`,
+            query,
+            {
+                headers: headers,
+            }
+        );
+        return response.data;
+    }
+
+    public async getRequestUsers( correlationId: string, userId: string ): Promise<any | null> {
+        const query = {
+            table: "V_REQUEST_USER_LOOKUP",
             select: "*",
             where: [{
                 "key": "LOOKUP_CODE",
@@ -81,7 +107,33 @@ class DataAccess {
             }
         );
         return response.data;
-    }
+    }    
+
+    public async getRequestAssigneeUsers( correlationId: string, userId: string ): Promise<any | null> {
+        const query = {
+            table: "V_REQUEST_ASS_USER_LOOKUP",
+            select: "*",
+            where: [{
+                "key": "LOOKUP_CODE",
+                "operator": "LIKE",
+                "value": `${userId}%`
+            }],
+            limit: 100
+        };
+        const headers = {
+            Accept: "application/json",
+            "X-Organisation-Correlation-Id": correlationId,
+        };
+        this.logger.debug("SQL: ", query, "correlationId: ", correlationId);
+        const response = await axios.post(
+            `${this.dataAccess}/query-builder`,
+            query,
+            {
+                headers: headers,
+            }
+        );
+        return response.data;
+    }        
 
     public async getNoteTypes( correlationId: string ): Promise<any | null> {
         const query = {
@@ -169,7 +221,7 @@ class DataAccess {
 
     public async getRequestDepartments( correlationId: string ): Promise<any | null> {
         const query = {
-            table: "V_REQUEST_USER_LOOKUP  ",
+            table: "REQUEST_DEPARTMENT",
             select: "*",
             limit: 100
         };

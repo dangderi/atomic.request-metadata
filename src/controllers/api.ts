@@ -54,6 +54,20 @@ export const getSecUsers = async (req: Request, res: Response) => {
 };
 
 /**
+ * @route get /request-users
+ */
+ export const getRequestUsers = async (req: Request, res: Response) => {
+    return delegate.getRequestUsers(req, res);
+};
+
+/**
+ * @route get /request-assignee-users
+ */
+ export const getRequestAssigneeUsers = async (req: Request, res: Response) => {
+    return delegate.getRequestAssigneeUsers(req, res);
+};
+
+/**
  * @route get /request-types
  */
 export const getRequestTypes = async (req: Request, res: Response) => {

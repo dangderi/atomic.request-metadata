@@ -268,6 +268,94 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+  /request-users:
+    get:
+      summary: REQUEST_USER meta data for lookups
+      description: REQUEST_USER meta data for lookups (This is fetching from DIAMONDS)
+      operationId: getRequestUsers
+      parameters:
+        - in: header
+          name: X-Organisation-Correlation-Id
+          schema:
+            type: string
+            format: uuid
+          required: true
+          description: Correlation or transaction Id in UUID format
+        - in: query
+          name: userId
+          schema:
+            type: string
+          required: false
+          description: Search for user ID that starts with the typed letters
+        - in: query
+          name: page
+          schema:
+            type: integer
+            format: int32
+            example: 1
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            format: int32
+            example: 100
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SecUsers'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /request-assignee-users:
+    get:
+      summary: REQUEST_ASSIGNEE_USER meta data for lookups
+      description: REQUEST_ASSIGNEE_USER meta data for lookups (This is fetching from DIAMONDS)
+      operationId: getRequestAssigneeUsers
+      parameters:
+        - in: header
+          name: X-Organisation-Correlation-Id
+          schema:
+            type: string
+            format: uuid
+          required: true
+          description: Correlation or transaction Id in UUID format
+        - in: query
+          name: userId
+          schema:
+            type: string
+          required: false
+          description: Search for user ID that starts with the typed letters
+        - in: query
+          name: page
+          schema:
+            type: integer
+            format: int32
+            example: 1
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            format: int32
+            example: 100
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SecUsers'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'                                
   /request-types:
     get:
       summary: REQUEST_TYPE meta data for lookups
