@@ -80,15 +80,6 @@ describe("getWrapUpCodes", () => {
     return expect(responseWrap.successResponse).toHaveBeenCalled();
   });
 });
-describe("getPolicyMetaData", () => {
-  it("it should return a successResponse", async () => {
-    const req: Request = (mockRequestWithHeader() as unknown) as Request;
-    const res: Response = (mockResponse() as unknown) as Response;
-    jest.spyOn(responseWrap, "successResponse").mockReturnThis();
-    await apiController.getPolicyMetaData(req, res);
-    return expect(responseWrap.successResponse).toHaveBeenCalled();
-  });
-});
 describe("getDepartments", () => {
   it("it should return a successResponse", async () => {
     const req: Request = (mockRequestWithHeader() as unknown) as Request;

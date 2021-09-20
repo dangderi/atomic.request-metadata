@@ -1,4 +1,4 @@
-import sampleService from "../../src/services/sample.service";
+import sampleService from "../../src/services/request.metadata.service";
 import axios from "axios";
 jest.mock("axios");
 const mockedAxios = axios as jest.Mocked<typeof axios>;
@@ -8,7 +8,7 @@ describe("getSample", () => {
     mockedAxios.get.mockImplementationOnce(() =>
       Promise.resolve(jest.fn().mockReturnThis())
     );
-    await sampleService.getSample(jest.fn().mockReturnThis());
+    await sampleService.getRequestStatuses(jest.fn().mockReturnThis());
     return expect(mockedAxios.get).toHaveBeenCalled();
   });
 });

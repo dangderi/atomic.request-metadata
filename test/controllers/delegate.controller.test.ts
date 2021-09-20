@@ -180,13 +180,13 @@ describe("getWrapUpCodes", () => {
     return expect(responseWrap.unexpectedErrorResponse).toHaveBeenCalled();
   });
 });
-describe("getPolicyMetaData", () => {
 
+describe("getRequestDepartments", () => {
   it("it should return a successResponse", async () => {
     const req: Request = (mockRequestWithHeader() as unknown) as Request;
     const res: Response = (mockResponse() as unknown) as Response;
     jest.spyOn(responseWrap, "successResponse").mockReturnThis();
-    await delegateController.getPolicyMetaData(req, res);
+    await delegateController.getRequestDepartments(req, res);
     return expect(responseWrap.successResponse).toHaveBeenCalled();
   });
 
@@ -194,7 +194,7 @@ describe("getPolicyMetaData", () => {
     const req: Request = (mockRequestWithoutHeader() as unknown) as Request;
     const res: Response = (mockResponse() as unknown) as Response;
     jest.spyOn(responseWrap, "badRequestResponse").mockReturnThis();
-    await delegateController.getPolicyMetaData(req, res);
+    await delegateController.getRequestDepartments(req, res);
     return expect(responseWrap.badRequestResponse).toHaveBeenCalled();
   });
 
@@ -205,36 +205,7 @@ describe("getPolicyMetaData", () => {
       throw new Error("Mock Errors");
     });
     jest.spyOn(responseWrap, "unexpectedErrorResponse").mockReturnThis();
-    await delegateController.getPolicyMetaData(req, res);
-    return expect(responseWrap.unexpectedErrorResponse).toHaveBeenCalled();
-  });
-});
-describe("getDepartments", () => {
-
-  it("it should return a successResponse", async () => {
-    const req: Request = (mockRequestWithHeader() as unknown) as Request;
-    const res: Response = (mockResponse() as unknown) as Response;
-    jest.spyOn(responseWrap, "successResponse").mockReturnThis();
-    await delegateController.getDepartments(req, res);
-    return expect(responseWrap.successResponse).toHaveBeenCalled();
-  });
-
-  it("it should return badRequestResponse", async () => {
-    const req: Request = (mockRequestWithoutHeader() as unknown) as Request;
-    const res: Response = (mockResponse() as unknown) as Response;
-    jest.spyOn(responseWrap, "badRequestResponse").mockReturnThis();
-    await delegateController.getDepartments(req, res);
-    return expect(responseWrap.badRequestResponse).toHaveBeenCalled();
-  });
-
-  it("it should return unexpectedErrorResponse", async () => {
-    const req: Request = (mockRequestWithHeader() as unknown) as Request;
-    const res: Response = (mockResponse() as unknown) as Response;
-    jest.spyOn(responseWrap, "successResponse").mockImplementation(() => {
-      throw new Error("Mock Errors");
-    });
-    jest.spyOn(responseWrap, "unexpectedErrorResponse").mockReturnThis();
-    await delegateController.getDepartments(req, res);
+    await delegateController.getRequestDepartments(req, res);
     return expect(responseWrap.unexpectedErrorResponse).toHaveBeenCalled();
   });
 });
